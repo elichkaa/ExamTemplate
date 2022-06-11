@@ -1,0 +1,60 @@
+﻿@using Exam.InputModels
+@model EditUserInputModel
+
+@{
+    ViewData["Title"] = "Edit user";
+    this.ViewBag.AllRoles = Model.AllRoles.Select(x => new SelectListItem
+            {
+                Value = x
+            }).ToList();
+}
+
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <form asp-controller="Administration" asp-action="EditUser" method="post" enctype="multipart/form-data">
+            <div class="input-group m-3">
+                <input type="email" class="form-control" value="@Model.Username" asp-for="Username">
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="input-group m-3">
+                <input class="form-control" value="@Model.Password" minlength="6" asp-for="Password">
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="input-group separated">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="margin-right: 0.5rem">Roles</span>
+                </div>
+                <div class="form-check">
+                    @for (var i = 0; i < this.ViewBag.AllRoles.Count; i++)
+                    {
+                        if (Model.Roles.Contains(this.ViewBag.AllRoles[i].Value))
+                        {
+                            <input class="form-check-input" checked name="Roles" type="checkbox" value="@this.ViewBag.AllRoles[i].Value" id="flexCheckDefault" />
+
+                            @this.ViewBag.AllRoles[i].Value
+
+                            <br />
+                        }
+                        else
+                        {
+                            <input class="form-check-input" name="Roles" type="checkbox" value="@this.ViewBag.AllRoles[i].Value" id="flexCheckDefault" />
+
+                            @this.ViewBag.AllRoles[i].Value
+
+                            <br />
+                        }
+
+                    }
+                </div>
+                <span asp-validation-for="Roles" class="text-danger"></span>
+            </div>
+            <span class="text-danger m-3">@TempData["Error"]</span>
+            <br />
+            <input class="btn btn-primary separated m-3" type="submit" value="Edit user">
+        </form>
+    </div>
+
+</div>
+
+

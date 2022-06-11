@@ -1,4 +1,4 @@
-﻿using Exam.Web.Models;
+﻿using Exam.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

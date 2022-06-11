@@ -1,0 +1,45 @@
+﻿@using Exam.InputModels
+@model AddUserInputModel
+
+@{
+    ViewData["Title"] = "Admin page";
+    this.ViewBag.Roles = Model.Roles.Select(x => new SelectListItem
+            {
+                Value = x
+            }).ToList();
+}
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <form asp-controller="Administration" asp-action="AddUser" method="post" enctype="multipart/form-data">
+            <div class="input-group m-3">
+                <input type="email" class="form-control" placeholder="Email" asp-for="Email">
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="input-group m-3">
+                <input type="password" class="form-control" placeholder="Password" minlength="6" asp-for="Password">
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="input-group separated">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="margin-right: 0.5rem">Roles</span>
+                </div>
+                <div class="form-check">
+                    @for (var i = 0; i < this.ViewBag.Roles.Count; i++)
+                    {
+                        <input class="form-check-input" name="Roles" type="checkbox" value="@this.ViewBag.Roles[i].Value" id="flexCheckDefault" />
+
+                        @this.ViewBag.Roles[i].Value
+
+                        <br />
+                    }
+                </div>
+                <span asp-validation-for="Roles" class="text-danger"></span>
+            </div>
+            <span class="text-danger m-3">@TempData["Error"]</span>
+            <br/>
+            <input class="btn btn-primary separated m-3" type="submit" value="Create user">
+        </form>
+    </div>
+
+</div>

@@ -1,5 +1,8 @@
 using Exam.Data;
 using Exam.Data.Models;
+using Exam.Services;
+using Exam.Services.Contracts;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +23,12 @@ builder.Services.AddDefaultIdentity<User>(options =>
     options.Password.RequiredLength = 6;
     options.Password.RequireNonAlphanumeric = false;
 })
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ExamDbContext>();
+
+builder.Services.AddTransient<IAdminService, AdminService>();
+builder.Services.AddTransient<IClientService, ClientService>();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

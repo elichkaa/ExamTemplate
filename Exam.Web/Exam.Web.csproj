@@ -19,12 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="FrontendModels\InputModels\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Exam.Data\Exam.Data.csproj" />
+    <ProjectReference Include="..\Exam.InputModels\Exam.InputModels.csproj" />
     <ProjectReference Include="..\Exam.Services\Exam.Services.csproj" />
+    <ProjectReference Include="..\Exam.ViewModels\Exam.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

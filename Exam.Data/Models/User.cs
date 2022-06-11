@@ -12,5 +12,7 @@ namespace Exam.Data.Models
         public DateTime CreatedOn { get; set; }
 
         public DateTime? ModifiedOn { get; set; }
+
+        public List<Order> Orders { get; set; }
     }
 }

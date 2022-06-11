@@ -1,0 +1,60 @@
+﻿@model List<UserOnAdminPageViewModel>
+@{
+    ViewData["Title"] = "Admin page";
+    var allRoles = new List<string>() { "Administrator", "Customer", "Tech" };
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">User Id</th>
+            <th scope="col">Username</th>
+            <th scope="col">Roles</th>
+            <th scope="col">Created on</th>
+            <th scope="col">Remove</th>
+            <th scope="col">Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <tr>
+                <th scope="row">@(i+1)</th>
+                <td>@Model[i].UserId</td>
+                <td>@Model[i].UserName</td>
+                @if (@Model[i].Roles != null && @Model[i].Roles.Count > 0)
+                {
+                    <td>
+                        @foreach (var role in Model[i].Roles)
+                        {
+                            <span>@role</span>
+                            <br />
+                        }
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        No roles
+                    </td>
+                }
+
+
+                <td>@Model[i].CreatedOn</td>
+                <td>
+                    <a class="btn btn-danger" asp-controller="Administration" asp-action="DeleteUser" asp-route-id="@Model[i].UserId">
+                        Remove User
+                    </a>
+                </td>
+                <td>
+                    <a class="btn btn-warning" asp-controller="Administration" asp-action="EditUser" asp-route-id="@Model[i].UserId">
+                        Edit User
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-success" asp-controller="Administration" asp-action="AddUser">Add User</a>

@@ -3,6 +3,16 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Top air conditioner service</h1>
+    @if (this.User.IsInRole("Administrator") || this.User.IsInRole("Customer"))
+    {
+        <div>Enjoy our services!</div>
+    }
+    else
+    {
+        <a asp-area="Identity" asp-page="/Account/Login">Login</a>
+        <span>or</span>
+        <a asp-area="Identity" asp-page="/Account/Register">Register</a>
+        <span>to access our services</span>
+    }
 </div>
