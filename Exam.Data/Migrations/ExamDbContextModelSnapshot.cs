@@ -17,12 +17,27 @@ namespace Exam.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.4")
+                .HasAnnotation("ProductVersion", "6.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Exam.Data.Models.Order", b =>
+            modelBuilder.Entity("Exam.Data.Models.Image", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("Exam.Data.Models.Request", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,42 +45,66 @@ namespace Exam.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Address")
+                    b.Property<DateTime>("FinalDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("FinalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("CheckedByTechnicianOn")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Requests");
+                });
+
+            modelBuilder.Entity("Exam.Data.Models.Room", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Image")
+                    b.Property<string>("ImageId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SupervisorTechnicianName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ImageId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("Exam.Data.Models.User", b =>
@@ -90,14 +129,17 @@ namespace Exam.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -143,18 +185,20 @@ namespace Exam.Data.Migrations
                         {
                             Id = "11e87c16-bc89-4393-a2b0-eb4e2debbd08",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7fadc277-79a2-45fd-819e-71a87d4eb8ed",
-                            CreatedOn = new DateTime(2022, 5, 1, 14, 46, 58, 807, DateTimeKind.Local).AddTicks(9711),
+                            ConcurrencyStamp = "0be2962c-374c-493a-8a67-3317a1ed5e11",
+                            CreatedOn = new DateTime(2022, 6, 12, 14, 29, 13, 228, DateTimeKind.Local).AddTicks(143),
                             Email = "admin@gmail.com",
                             EmailConfirmed = false,
+                            FirstName = "Admin",
+                            LastName = "Adminov",
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
-                            NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAECkTLgo7AJuHaZs58azS0D5+Qxv/MVQanoG2OR487V570d7Q3JtTeekrv4HccdfMCw==",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPh2S4BMe9J+OUCgjwpi1l6H8yhkiCvpILWORXevYWNj8t80DqxvPzLxUxwC3b71VQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8bfdc3b3-9d1f-49b7-9908-ce621add8f44",
+                            SecurityStamp = "dc817666-3461-4331-a4ae-f210b52749ab",
                             TwoFactorEnabled = false,
-                            UserName = "admin@gmail.com"
+                            UserName = "admin"
                         });
                 });
 
@@ -188,23 +232,16 @@ namespace Exam.Data.Migrations
                         new
                         {
                             Id = "0bdba52e-e8ca-4481-84fe-ccd0142c33b6",
-                            ConcurrencyStamp = "2c42e99d-53b0-471f-a157-76b489fdc097",
+                            ConcurrencyStamp = "8bccce28-5735-42e5-9164-6fd9d521c4af",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "9bf1gh11-joa8-24n3-343x-akdi20fjs932",
-                            ConcurrencyStamp = "690ba3f6-c65a-45a4-9c11-f63a723124bb",
-                            Name = "Tech",
-                            NormalizedName = "TECH"
-                        },
-                        new
-                        {
                             Id = "2bc2f661-4a73-4105-9f9f-93009a35ca26",
-                            ConcurrencyStamp = "72a45aca-967e-4bac-8306-7e930072d1d1",
-                            Name = "Customer",
-                            NormalizedName = "CUSTOMER"
+                            ConcurrencyStamp = "fb875091-8d92-4c99-a3ff-a09427a35694",
+                            Name = "Client",
+                            NormalizedName = "CLIENT"
                         });
                 });
 
@@ -330,15 +367,30 @@ namespace Exam.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Exam.Data.Models.Order", b =>
+            modelBuilder.Entity("Exam.Data.Models.Request", b =>
                 {
+                    b.HasOne("Exam.Data.Models.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId");
+
                     b.HasOne("Exam.Data.Models.User", "User")
-                        .WithMany("Orders")
-                        .HasForeignKey("UserId")
+                        .WithMany("Requests")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Room");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Exam.Data.Models.Room", b =>
+                {
+                    b.HasOne("Exam.Data.Models.Image", "Image")
+                        .WithMany()
+                        .HasForeignKey("ImageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -394,7 +446,7 @@ namespace Exam.Data.Migrations
 
             modelBuilder.Entity("Exam.Data.Models.User", b =>
                 {
-                    b.Navigation("Orders");
+                    b.Navigation("Requests");
                 });
 #pragma warning restore 612, 618
         }

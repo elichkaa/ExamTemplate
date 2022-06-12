@@ -1,5 +1,4 @@
-﻿@using Exam.InputModels
-@model AddUserInputModel
+﻿@model AddUserInputModel
 
 @{
     ViewData["Title"] = "Admin page";
@@ -13,10 +12,12 @@
     <div class="col-md-6">
         <form asp-controller="Administration" asp-action="AddUser" method="post" enctype="multipart/form-data">
             <div class="input-group m-3">
+                <span>Email:</span>
                 <input type="email" class="form-control" placeholder="Email" asp-for="Email">
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="input-group m-3">
+                <span>Password:</span>
                 <input type="password" class="form-control" placeholder="Password" minlength="6" asp-for="Password">
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>

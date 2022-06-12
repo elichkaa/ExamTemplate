@@ -1,6 +1,6 @@
 ﻿namespace Exam.ViewModels
 {
-    public class UserOnAdminPageViewModel
+    public class UserViewModel
     {
         public string UserId { get; set; }
 

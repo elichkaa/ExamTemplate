@@ -1,0 +1,47 @@
+﻿@model EditRequestInputModel
+
+@{
+    ViewData["Title"] = "Edit request";
+}
+
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+
+        <form asp-controller="Administration" asp-action="EditRequest" method="post" enctype="multipart/form-data">
+            <div class="input-group m-3">
+                <label class="m-2" asp-for="@Model.StartDate"></label>
+                <input class="form-control"  value="@Model.StartDate" placeholder="Start Date" asp-for="StartDate">
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="input-group m-3">
+                <label class="m-2" asp-for="@Model.FinalDate"></label>
+                <input class="form-control"  value="@Model.FinalDate" placeholder="FinalDate" asp-for="FinalDate"></input>
+                <span asp-validation-for="FinalDate" class="text-danger"></span>
+            </div>
+            <div class="input-group m-3">
+                <label class="m-2" asp-for="@Model.FinalPrice"></label>
+                <input class="form-control"  value="@Model.FinalPrice" placeholder="FinalPrice" asp-for="FinalPrice">
+                <span asp-validation-for="FinalPrice" class="text-danger"></span>
+            </div>
+            <div class="input-group m-3">
+                <label class="m-2" asp-for="@Model.Username"></label>
+                <input class="form-control" value="@Model.Username" placeholder="Username" asp-for="Username">
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="input-group m-3">
+                <label class="m-2" asp-for="@Model.RoomName"></label>
+                <input class="form-control" value="@Model.RoomName" placeholder="RoomName" asp-for="RoomName">
+                <span asp-validation-for="RoomName" class="text-danger"></span>
+            </div>
+            <div class="input-group m-3">
+                <label class="m-2" asp-for="@Model.Status"></label>
+                <input class="form-control" value="@Model.Status" placeholder="Status" asp-for="Status">
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <br />
+            <input class="btn btn-primary separated m-1" type="submit" value="Edit room">
+        </form>
+    </div>
+
+</div>

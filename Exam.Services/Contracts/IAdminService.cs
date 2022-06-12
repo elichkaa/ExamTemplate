@@ -1,13 +1,12 @@
 ﻿using Exam.Data.Models;
 using Exam.InputModels;
 using Exam.ViewModels;
-using System.Security.Claims;
 
 namespace Exam.Services.Contracts
 {
     public interface IAdminService
     {
-        List<UserOnAdminPageViewModel> GetAllUsers();
+        List<UserViewModel> GetAllUsers();
 
         Task AddUser(AddUserInputModel input);
 
@@ -23,12 +22,24 @@ namespace Exam.Services.Contracts
 
         Task EditUser(EditUserInputModel input, string userId);
 
-        List<OrderOnAdminPageViewModel> GetAllOrders(string username);
+        List<RoomViewModel> GetAllRooms();
 
-        Task<EditOrderByAdminInputModel> GetOrderById(int orderId);
+        Task<EditRoomInputModel> GetRoomById(int roomId);
 
-        Task EditOrderByAdmin(EditOrderByAdminInputModel input);
+        Task EditRoom(EditRoomInputModel input, string basePath);
 
-        Task DeleteOrder(int id);
+        Task DeleteRoom(int id);
+
+        Task AddRoom(AddRoomInputModel input, string basePath, User user);
+
+        Task AddRequest(AddRequestInputModel input);
+
+        Task DeleteRequest(int id);
+
+        Task EditRequest(EditRequestInputModel input);
+
+        List<RequestViewModel> GetAllRequests(string status);
+
+        Task<EditRequestInputModel> GetRequestById(int requestId);
     }
 }

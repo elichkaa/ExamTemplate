@@ -1,0 +1,65 @@
+﻿@model List<RequestViewModel>
+
+@{
+    ViewData["Title"] = "My requests";
+}
+<form asp-controller="Client" asp-action="MyRequests" enctype="multipart/form-data">
+    <span>Available status messages: Pending, Cancelled, Active, Used</span>
+    <div class="input-group">
+        <div class="form-outline">
+            <input type="search" name="status" id="form1" placeholder="Status name" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">
+            Filter
+        </button>
+    </div>
+</form>
+
+@if (Model != null && Model.Count != 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Id</th>
+                <th scope="col">Start date</th>
+                <th scope="col">Final date</th>
+                <th scope="col">Room name</th>
+                <th scope="col">Username</th>
+                <th scope="col">Final price</th>
+                <th scope="col">Status</th>
+                <th scope="col">Cancel</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <th scope="row">@(i+1)</th>
+                    <td>@Model[i].Id</td>
+                    <td>@Model[i].StartDate</td>
+                    <td>@Model[i].FinalDate</td>
+                    <td>@Model[i].RoomName</td>
+                    <td>@Model[i].Username</td>
+                    <td>@Model[i].FinalPrice</td>
+                    <td>@Model[i].Status</td>
+
+                    <td>
+                        <a class="btn btn-warning" asp-controller="Client" asp-action="CancelRequest" asp-route-requestId="@Model[i].Id">
+                            Cancel request
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h1>You have no requests or you have entered a wrong status name.</h1>
+    <div class="m-3">
+        <a class="btn btn-primary" asp-controller="Client" asp-action="RoomMenu">
+            Try again or add new requests.
+        </a>
+    </div>
+}

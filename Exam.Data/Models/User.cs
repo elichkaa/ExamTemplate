@@ -9,10 +9,12 @@ namespace Exam.Data.Models
             this.Id = Guid.NewGuid().ToString();
         }
 
+        public string? FirstName { get; set; }
+
+        public string? LastName { get; set; }
+
         public DateTime CreatedOn { get; set; }
 
-        public DateTime? ModifiedOn { get; set; }
-
-        public List<Order> Orders { get; set; }
+        public List<Request> Requests { get; set; }
     }
 }

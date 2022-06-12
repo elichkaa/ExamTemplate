@@ -8,7 +8,7 @@ namespace Exam.Data.Configurations
     {
         private const string administratorUserId = "11e87c16-bc89-4393-a2b0-eb4e2debbd08";
         private const string administratorRoleId = "0bdba52e-e8ca-4481-84fe-ccd0142c33b6";
-        private const string customerRoleId = "2bc2f661-4a73-4105-9f9f-93009a35ca26";
+        private const string clientRoleId = "2bc2f661-4a73-4105-9f9f-93009a35ca26";
 
         public void Configure(EntityTypeBuilder<IdentityUserRole<string>> builder)
         {
@@ -19,7 +19,7 @@ namespace Exam.Data.Configurations
             };
             IdentityUserRole<string> clientRole = new IdentityUserRole<string>
             {
-                RoleId = customerRoleId,
+                RoleId = clientRoleId,
                 UserId = administratorUserId
             };
 

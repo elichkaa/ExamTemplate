@@ -6,14 +6,12 @@ namespace Exam.Services.Contracts
 {
     public interface IClientService
     {
-        public List<OrderOnAllPageViewModel> GetAllOrders(string clientId, string status);
+        Task AddRequst(AddRequestClientInputModel input, User user, int roomId);
 
-        public void AddOrder(AddOrderInputModel input, User user);
+        Task CancelRequest(int requestId);
 
-        public void EditOrder(EditOrderInputModel input, int id);
+        List<RoomViewModel> GetAllRooms();
 
-        public void DeleteOrder(int orderId);
-
-        public OrderOnAllPageViewModel GetSingleOrder(int orderId);
+        List<RequestViewModel> GetAllRequests(User user, string status);
     }
 }

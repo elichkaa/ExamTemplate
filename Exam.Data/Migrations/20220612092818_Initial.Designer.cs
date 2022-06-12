@@ -12,19 +12,34 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Exam.Data.Migrations
 {
     [DbContext(typeof(ExamDbContext))]
-    [Migration("20220501112932_RemoveStatus")]
-    partial class RemoveStatus
+    [Migration("20220612092818_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.4")
+                .HasAnnotation("ProductVersion", "6.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Exam.Data.Models.Order", b =>
+            modelBuilder.Entity("Exam.Data.Models.Image", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("Exam.Data.Models.Request", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -32,33 +47,19 @@ namespace Exam.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CheckedByTechnicianOn")
+                    b.Property<DateTime>("FinalDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CreatedOn")
+                    b.Property<decimal>("FinalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SupervisorTechnicianName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -68,9 +69,45 @@ namespace Exam.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RoomId");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Requests");
+                });
+
+            modelBuilder.Entity("Exam.Data.Models.Room", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ImageId");
+
+                    b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("Exam.Data.Models.User", b =>
@@ -95,14 +132,19 @@ namespace Exam.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -148,18 +190,20 @@ namespace Exam.Data.Migrations
                         {
                             Id = "11e87c16-bc89-4393-a2b0-eb4e2debbd08",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9ac110ff-b8f3-4d4d-9e1d-227e7aaf3ae5",
-                            CreatedOn = new DateTime(2022, 5, 1, 14, 29, 32, 445, DateTimeKind.Local).AddTicks(9485),
+                            ConcurrencyStamp = "740aa352-9493-4921-980e-6796d91eadc4",
+                            CreatedOn = new DateTime(2022, 6, 12, 12, 28, 17, 967, DateTimeKind.Local).AddTicks(3449),
                             Email = "admin@gmail.com",
                             EmailConfirmed = false,
+                            FirstName = "Admin",
+                            LastName = "Adminov",
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
-                            NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOcgxjg469f+eRG+O/W0KPmLoc22IlmXcM3jxTRNz7LrTWDlN1kTqEu7h+3HE4vCaw==",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEB4yo6lholx7dZv4/5L+EKTT31j9sC/DD7WbDmoNNb6pjHfjTh0YYBHofw6AdXURDA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "abefe780-7975-4ce0-b321-61a92b0ecf50",
+                            SecurityStamp = "6abb8911-55da-46fe-a4be-4c1a6e51da8c",
                             TwoFactorEnabled = false,
-                            UserName = "admin@gmail.com"
+                            UserName = "admin"
                         });
                 });
 
@@ -193,23 +237,16 @@ namespace Exam.Data.Migrations
                         new
                         {
                             Id = "0bdba52e-e8ca-4481-84fe-ccd0142c33b6",
-                            ConcurrencyStamp = "53aa9566-b47d-466c-8267-3d957aea872f",
+                            ConcurrencyStamp = "95fb41b6-6065-4202-9d32-1e4a456d78ee",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "9bf1gh11-joa8-24n3-343x-akdi20fjs932",
-                            ConcurrencyStamp = "868bbc69-2153-415e-98d7-89f80312ffca",
-                            Name = "Tech",
-                            NormalizedName = "TECH"
-                        },
-                        new
-                        {
                             Id = "2bc2f661-4a73-4105-9f9f-93009a35ca26",
-                            ConcurrencyStamp = "abfec760-9f77-4978-9328-7e551c71b418",
-                            Name = "Customer",
-                            NormalizedName = "CUSTOMER"
+                            ConcurrencyStamp = "df00ffde-2994-4bcb-93a9-06ae8b758c81",
+                            Name = "Client",
+                            NormalizedName = "CLIENT"
                         });
                 });
 
@@ -335,15 +372,34 @@ namespace Exam.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Exam.Data.Models.Order", b =>
+            modelBuilder.Entity("Exam.Data.Models.Request", b =>
                 {
+                    b.HasOne("Exam.Data.Models.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Exam.Data.Models.User", "User")
-                        .WithMany("Orders")
+                        .WithMany("Requests")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Room");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Exam.Data.Models.Room", b =>
+                {
+                    b.HasOne("Exam.Data.Models.Image", "Image")
+                        .WithMany()
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -399,7 +455,7 @@ namespace Exam.Data.Migrations
 
             modelBuilder.Entity("Exam.Data.Models.User", b =>
                 {
-                    b.Navigation("Orders");
+                    b.Navigation("Requests");
                 });
 #pragma warning restore 612, 618
         }

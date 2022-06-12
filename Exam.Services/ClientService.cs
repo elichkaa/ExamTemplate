@@ -3,6 +3,7 @@ using Exam.Data.Models;
 using Exam.InputModels;
 using Exam.Services.Contracts;
 using Exam.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Exam.Services
 {
@@ -15,78 +16,111 @@ namespace Exam.Services
             this.dbContext = dbContext;
         }
 
-        public void AddOrder(AddOrderInputModel input, User user)
+        public async Task AddRequst(AddRequestClientInputModel input, User user, int roomId)
         {
-            dbContext.Orders.Add(new Order
+            var request = new Request()
             {
-                Name = input.Name,
-                Description = input.Description,
-                Address = input.Address,
-                Status = "Waiting",
-                Image = input.Image,
+                StartDate = input.StartDate,
+                FinalDate = input.FinalDate,
+                FinalPrice = input.FinalPrice,
+                Status = DetermineStatus(input.StartDate),
+                Room = await this.dbContext.Rooms.FirstOrDefaultAsync(x => x.Id == roomId),
+                RoomId = roomId,
                 User = user,
-                CreatedOn = DateTime.Now
-            });
-            dbContext.SaveChanges();
+                UserId = user.Id
+            };
+            await this.dbContext.Requests.AddAsync(request);
+            await dbContext.SaveChangesAsync();
         }
 
-        public void DeleteOrder(int orderId)
+        public async Task CancelRequest(int requestId)
         {
-            var orderToDelete = this.dbContext.Orders.Where(x => x.Id == orderId).FirstOrDefault();
-            if (orderToDelete != null)
+            var request = await this.dbContext.Requests.FirstOrDefaultAsync(x => x.Id == requestId);
+            if(DateTime.Now < request.StartDate)
             {
-                dbContext.Orders.Remove(orderToDelete);
-            }
-            dbContext.SaveChanges();
-        }
-
-        public void EditOrder(EditOrderInputModel input, int id)
-        {
-            var dbOrder = this.dbContext.Orders.Where(x => x.Id == id).FirstOrDefault();
-            dbOrder.Name = input.Name != dbOrder.Name ? input.Name : dbOrder.Name;
-            dbOrder.Description = input.Description != dbOrder.Description ? input.Description : dbOrder.Description;
-            dbOrder.Address = input.Address != dbOrder.Address ? input.Address : dbOrder.Address;
-            dbOrder.Image = input.Image != dbOrder.Image ? input.Image : dbOrder.Image;
-            dbContext.Update(dbOrder);
-            dbContext.SaveChanges();
-        }
-
-        public List<OrderOnAllPageViewModel> GetAllOrders(string clientId, string status)
-        {
-            var usersOrders = new List<Order>();
-            if (string.IsNullOrEmpty(status))
-            {
-                usersOrders = this.dbContext.Orders.Where(x => x.UserId == clientId).ToList();
+                request.Status = "Cancelled";
             }
             else
             {
-                usersOrders = this.dbContext.Orders.Where(x => x.UserId == clientId && x.Status.ToLower() == status.ToLower()).ToList();
+                throw new ArgumentException("Your escape room has already started and you cannot cancel it.");
             }
-           
-            var orders = usersOrders.Select(o => new OrderOnAllPageViewModel()
-            {
-                Address = o.Address,
-                Name = o.Name,
-                StatusName = o.Status,
-                Description = o.Description!,
-                Id = o.Id
-            }).ToList();
-            return orders;
+
+            dbContext.Update(request);
+            dbContext.SaveChanges();
         }
 
-        public OrderOnAllPageViewModel GetSingleOrder(int orderId)
+        public List<RequestViewModel> GetAllRequests(User user, string status)
         {
-            var dbOrders = this.dbContext.Orders.Where(x => x.Id == orderId).ToList();
-            var orders = dbOrders.Select(o => new OrderOnAllPageViewModel()
+            var requests = new List<Request>();
+            if (string.IsNullOrEmpty(status))
             {
-                Id = o.Id,
-                Address = o.Address,
-                Name = o.Name,
-                Image = o.Image,
-                StatusName = o.Status,
-                Description = o.Description
+                requests = this.dbContext.Requests.Include(x => x.Room).Include(x => x.User).ToList();
+            }
+            else
+            {
+                requests = this.dbContext.Requests.Include(x => x.Room).Include(x => x.User).Where(x => x.Status!.ToLower() == status.ToLower()).ToList();
+            }
+
+            if (requests == null || requests.Count == 0)
+            {
+                return null;
+            }
+            return requests.Select(x => new RequestViewModel
+            {
+                Id = x.Id,
+                StartDate = x.StartDate,
+                FinalDate = x.FinalDate,
+                RoomName = x.Room!.Name,
+                Username = user.UserName,
+                FinalPrice = x.FinalPrice,
+                Status = x.Status!
             }).ToList();
-            return orders.FirstOrDefault();
         }
+
+        public List<RoomViewModel> GetAllRooms()
+        {
+            //var rooms = new List<Room?>();
+            //if(start == default(DateTime) || end == default(DateTime))
+            //{
+            //    rooms = null;
+            //}
+            //else
+            //{
+            var rooms = this.dbContext.Rooms.Include(x => x.Image).ToList();
+        //}
+            
+
+            if (rooms == null || rooms.Count == 0)
+            {
+                return null;
+            }
+
+            return rooms.Select(x => new RoomViewModel
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description,
+                Location = x.Location,
+                Price = x.Price,
+                Image = x.Image != null ? x.Image.Url : null,
+            }).ToList();
+        }
+
+        private string DetermineStatus(DateTime startDate)
+        {
+            if(DateTime.Now < startDate)
+            {
+                return "Pending";
+            }
+            else if (DateTime.Now >= startDate && DateTime.Now.Hour < startDate.Hour + 1)
+            {
+                return "Active";
+            }
+            else
+            {
+                return "Used";
+            }
+        }
+
     }
 }

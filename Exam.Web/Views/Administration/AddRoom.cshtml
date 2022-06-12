@@ -1,0 +1,33 @@
+﻿@model AddRoomInputModel
+@{
+    ViewData["Title"] = "Add room";
+}
+
+<div class="row">
+   <div class="col-md-3"></div>
+   <div class="col-md-6">
+       <form asp-controller="Administration" asp-action="AddRoom" method="post" enctype="multipart/form-data">
+        <div class="input-group m-3">
+            <input class="form-control" placeholder="Name" asp-for="Name">
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="input-group m-3">
+            <textarea class="form-control" placeholder="Description" asp-for="Description"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="input-group m-3">
+            <input class="form-control" placeholder="Location" asp-for="Location">
+            <span asp-validation-for="Location" class="text-danger"></span>
+        </div>
+        <div class="input-group m-3">
+            <input class="form-control" placeholder="Price" asp-for="Price">
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+        <div class="input-group m-3">
+            <input class="form-control" placeholder="Link to image" asp-for="Image">
+            <span asp-validation-for="Image" class="text-danger"></span>
+        </div>
+        <input class="btn btn-primary separated" type="submit" value="Add room">
+    </form>
+   </div>
+</div>

@@ -1,0 +1,43 @@
+﻿@using Exam.InputModels
+@model EditRoomInputModel
+
+@{
+    ViewData["Title"] = "Edit room";
+}
+
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+
+        <form asp-controller="Administration" asp-action="EditRoom" method="post" enctype="multipart/form-data">
+            <div class="input-group m-3">
+                <label class="m-2" asp-for="@Model.Name"></label>
+                <input class="form-control"  value="@Model.Name" placeholder="Name" asp-for="Name">
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="input-group m-3">
+                <label class="m-2" asp-for="@Model.Description"></label>
+                <textarea class="form-control"  value="@Model.Description" placeholder="Description" asp-for="Description"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="input-group m-3">
+                <label class="m-2" asp-for="@Model.Location"></label>
+                <input class="form-control"  value="@Model.Location" placeholder="Location" asp-for="Location">
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+            <div class="input-group m-3">
+                <label class="m-2" asp-for="@Model.Price"></label>
+                <input class="form-control" value="@Model.Price" placeholder="Price" asp-for="Price">
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            @*<div class="input-group m-3">
+                <label class="m-2" asp-for="@Model.Image"></label>
+                <input class="form-control"  value="@Model.Image" placeholder="Link to image" asp-for="Image">
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>*@
+            <br />
+            <input class="btn btn-primary separated m-1" type="submit" value="Edit room">
+        </form>
+    </div>
+
+</div>

@@ -1,0 +1,55 @@
+﻿@model List<RoomViewModel>
+
+@{
+    ViewData["Title"] = "Rooms menu";
+}
+
+@*<form asp-controller="Client" asp-action="RoomMenu" enctype="multipart/form-data">
+    <div class="input-group">
+        <div class="form-outline">
+            <input name="start" id="form1" placeholder="Start date" class="form-control" />
+            <input name="end" id="form1" placeholder="End date" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">
+            Filter
+        </button>
+    </div>
+</form>*@
+
+@if (Model != null && Model.Count != 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Location</th>
+                <th scope="col">Price</th>
+                <th scope="col">Image</th>
+                <th scope="col">Add request</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <th scope="row">@(i+1)</th>
+                    <td>@Model[i].Id</td>
+                    <td>@Model[i].Name</td>
+                    <td>@Model[i].Description</td>
+                    <td>@Model[i].Location</td>
+                    <td>@Model[i].Price</td>
+                    <td><img src="@Model[i].Image" /></td>
+                    <td><a class="btn btn-success" asp-controller="Client" asp-action="AddRequest" asp-route-roomId="@Model[i].Id">Add request</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+}
+else
+{
+    <h1>No rooms in system.</h1>
+}

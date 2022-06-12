@@ -1,6 +1,6 @@
 ﻿namespace Exam.ViewModels
 {
-    public class OrderOnAllPageViewModel
+    public class RoomViewModel
     {
         public int Id { get; set; }
 
@@ -8,10 +8,10 @@
 
         public string Description { get; set; }
 
-        public string Address { get; set; }
+        public string Location { get; set; }
+
+        public decimal Price { get; set; }
 
         public string Image { get; set; }
-
-        public string StatusName { get; set; }
     }
 }

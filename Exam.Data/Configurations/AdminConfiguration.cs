@@ -15,8 +15,10 @@ namespace Exam.Data.Configurations
             var admin = new User
             {
                 Id = userId,
-                UserName = "admin@gmail.com",
-                NormalizedUserName = "ADMIN@GMAIL.COM",
+                FirstName = "Admin",
+                LastName = "Adminov",
+                UserName = "admin",
+                NormalizedUserName = "ADMIN",
                 Email = "admin@gmail.com",
                 NormalizedEmail = "ADMIN@GMAIL.COM",
                 CreatedOn = DateTime.Now,

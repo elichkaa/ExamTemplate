@@ -3,16 +3,18 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Top air conditioner service</h1>
+    <h1 class="display-4">No Way Out Escape Room</h1>
     @if (this.User.IsInRole("Administrator") || this.User.IsInRole("Customer"))
     {
-        <div>Enjoy our services!</div>
+        <div>Have a look at our rooms!</div>
     }
     else
     {
         <a asp-area="Identity" asp-page="/Account/Login">Login</a>
         <span>or</span>
         <a asp-area="Identity" asp-page="/Account/Register">Register</a>
-        <span>to access our services</span>
+        <span>to access our rooms!</span>
     }
 </div>
+
+<div class="text-danger">@TempData["Error"]</div>

@@ -1,8 +1,9 @@
 ﻿using Exam.Services.Contracts;
-using Exam.InputModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Exam.Data.Models;
+using Exam.InputModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace Exam.Web.Controllers
 {
@@ -10,10 +11,14 @@ namespace Exam.Web.Controllers
     public class AdministrationController : Controller
     {
         private readonly IAdminService adminService;
+        private readonly UserManager<User> userManager;
+        private readonly IWebHostEnvironment environment;
 
-        public AdministrationController(IAdminService adminService)
+        public AdministrationController(IAdminService adminService, UserManager<User> userManager, IWebHostEnvironment environment)
         {
             this.adminService = adminService;
+            this.userManager = userManager;
+            this.environment = environment;
         }
 
         [HttpGet]
@@ -23,10 +28,11 @@ namespace Exam.Web.Controllers
             return View(users);
         }
 
-        public IActionResult Orders([FromForm] string username)
+        [HttpGet]
+        public IActionResult Rooms()
         {
-            var allOrders = this.adminService.GetAllOrders(username);
-            return View(allOrders);
+            var allRooms = this.adminService.GetAllRooms();
+            return View(allRooms);
         }
 
         [HttpGet]
@@ -100,19 +106,15 @@ namespace Exam.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditOrder(int id)
+        public async Task<IActionResult> EditRoom(int roomId)
         {
-            var orderDetails = await this.adminService.GetOrderById(id);
-            return View(new EditOrderByAdminInputModel()
-            {
-                Id = id,
-                SupervisorTechnicianName = orderDetails.SupervisorTechnicianName,
-                CheckedByTechnicianOn = orderDetails.CheckedByTechnicianOn
-            });
+            var oldRoom = await this.adminService.GetRoomById(roomId);
+            TempData["Id"] = roomId;
+            return View(oldRoom);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditOrder(EditOrderByAdminInputModel input)
+        public async Task<IActionResult> EditRoom(EditRoomInputModel input)
         {
             if (!ModelState.IsValid)
             {
@@ -120,15 +122,116 @@ namespace Exam.Web.Controllers
                 return this.View(input);
             }
 
-            await this.adminService.EditOrderByAdmin(input);
+            input.Id = (int)TempData["Id"];
+            await this.adminService.EditRoom(input, $"{this.environment.WebRootPath}\\img\\");
 
-            return RedirectToAction("Orders");
+            return RedirectToAction("Rooms");
         }
 
-        public async Task<IActionResult> DeleteOrder(int orderId)
+        public async Task<IActionResult> DeleteRoom(int roomId)
         {
-            await this.adminService.DeleteOrder(orderId);
-            return RedirectToAction("Orders");
+            await this.adminService.DeleteRoom(roomId);
+            return RedirectToAction("Rooms");
+        }
+
+        [HttpGet]
+        public IActionResult AddRoom()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddRoom(AddRoomInputModel input)
+        {
+            if (!ModelState.IsValid)
+            {
+                this.ModelState.AddModelError(string.Empty, "Invalid arguments");
+                return this.View(input);
+            }
+
+            try
+            {
+                await this.adminService.AddRoom(input, $"{this.environment.WebRootPath}\\img\\", await this.userManager.GetUserAsync(this.User));
+            }
+            catch(Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index", "Home");
+            }
+            
+            return RedirectToAction("Rooms");
+        }
+
+        public IActionResult Requests([FromForm] string status)
+        {
+            var allRequests = this.adminService.GetAllRequests(status);
+            return View(allRequests);
+        }
+
+        [HttpGet]
+        public IActionResult AddRequest()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddRequest(AddRequestInputModel input)
+        {
+            if (!ModelState.IsValid)
+            {
+                this.ModelState.AddModelError(string.Empty, "Invalid arguments");
+                return this.View(input);
+            }
+
+            try
+            {
+                await this.adminService.AddRequest(input);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index", "Home");
+            }
+
+            return RedirectToAction("Requests");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditRequest(int requestId)
+        {
+            var oldRequest = await this.adminService.GetRequestById(requestId);
+            TempData["Id"] = requestId;
+            return View(oldRequest);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditRequest(EditRequestInputModel input)
+        {
+            if (!ModelState.IsValid)
+            {
+                this.ModelState.AddModelError(string.Empty, "Invalid arguments");
+                return this.View(input);
+            }
+
+
+            input.Id = (int)TempData["Id"];
+            try
+            {
+                await this.adminService.EditRequest(input);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index", "Home");
+            }
+
+            return RedirectToAction("Requests");
+        }
+
+        public async Task<IActionResult> DeleteRequest(int requestId)
+        {
+            await this.adminService.DeleteRequest(requestId);
+            return RedirectToAction("Requests");
         }
     }
 }

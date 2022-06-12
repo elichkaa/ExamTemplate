@@ -18,20 +18,28 @@ namespace Exam.Web.Controllers
             this.clientService = clientService;
             this.userManager = userManager;
         }
-        public IActionResult Index([FromForm] string status)
+
+        [HttpGet]
+        public IActionResult RoomMenu()
         {
-            var userOrders = this.clientService.GetAllOrders(this.userManager.GetUserId(this.User), status);
-            return View(userOrders);
+            var rooms = this.clientService.GetAllRooms();
+            return View(rooms);
+        }
+
+        public async Task<IActionResult> MyRequests([FromForm] string status)
+        {
+            var requests = this.clientService.GetAllRequests(await this.userManager.GetUserAsync(this.User), status);
+            return View(requests);
         }
 
         [HttpGet]
-        public IActionResult Add()
+        public IActionResult AddRequest()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(AddOrderInputModel input)
+        public async Task<IActionResult> AddRequest(AddRequestClientInputModel input, int roomId)
         {
             if (!ModelState.IsValid)
             {
@@ -39,36 +47,22 @@ namespace Exam.Web.Controllers
                 return this.View(input);
             }
 
-            this.clientService.AddOrder(input, await this.userManager.GetUserAsync(this.User));
-            return RedirectToAction("Index", "Client");
+            await this.clientService.AddRequst(input, await this.userManager.GetUserAsync(this.User), roomId);
+            return RedirectToAction("RoomMenu");
         }
 
-        public IActionResult Delete(int orderId)
+        public IActionResult CancelRequest(int requestId)
         {
-            this.clientService.DeleteOrder(orderId);
-            return RedirectToAction("Index", "Client");
-        }
-
-        [HttpGet]
-        public IActionResult Edit(int orderId)
-        {
-            var order = this.clientService.GetSingleOrder(orderId);
-            ViewData["Filled"] = order;
-            TempData["OrderId"] = orderId;
-            return View(new EditOrderInputModel());
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Edit(EditOrderInputModel input)
-        {
-            if (!ModelState.IsValid)
+            try
             {
-                this.ModelState.AddModelError(string.Empty, "Invalid arguments");
-                return this.View(input);
+                this.clientService.CancelRequest(requestId);
             }
-
-            this.clientService.EditOrder(input, (int)TempData["OrderId"]);
-            return RedirectToAction("Index", "Client");
+            catch (Exception ex)
+            {
+                this.TempData["Error"] = ex.Message;
+                return RedirectToAction("Index", "Home");
+            }
+            return RedirectToAction("MyRequests");
         }
     }
 }

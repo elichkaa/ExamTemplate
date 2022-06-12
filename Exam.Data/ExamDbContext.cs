@@ -3,7 +3,6 @@ using Exam.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 namespace Exam.Data
 {
@@ -27,6 +26,8 @@ namespace Exam.Data
             modelBuilder.ApplyConfiguration(new UserConfiguration());
         }
 
-        public DbSet<Order> Orders { get; set; }
+        public DbSet<Request> Requests { get; set; }
+        public DbSet<Image> Images { get; set; }
+        public DbSet<Room> Rooms { get; set; }
     }
 }
